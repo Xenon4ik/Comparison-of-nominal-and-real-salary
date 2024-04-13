@@ -1,6 +1,8 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 
+import streamlit as st
+
 df = pd.read_excel('table_salary.xlsx')
 years = df.columns[1:].astype(int)
 salary_strointel = df[df['Вид деятельности'] == 'Строительство'].values[0][1:]
@@ -31,6 +33,9 @@ plt.plot(years, salary_strointel, '-', color='green',label='Зарплата с�
 plt.plot(years, salary_hotels, '-', color='blue',label="Зарплата работников гостиничного дела")
 plt.plot(years, salary_doctors, '-', color='red',label='Зарплата врача')
 
+st.image('pic1.jpg', caption='Введение')
+
+
 plt.title('Графики изменения номинальной ЗП')
 
 plt.subplot(1, 2, 2)
@@ -40,3 +45,18 @@ plt.plot(years, salary_with_inflation_doctor, '-', color='red', label='Зарп�
 
 plt.title('Графики изменения реальной ЗП')
 plt.show()
+
+st.title('Изменения зп')
+
+
+st.write("")
+st.write(df)
+
+st.write("Изменение цен:")
+
+st.pyplot(plt)
+
+# st.button("Перезапустить", type="primary")
+
+if st.button("Перезапустить"):
+    st.rerun()

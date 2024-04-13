@@ -1,9 +1,9 @@
 import pandas as pd
 from matplotlib import pyplot as plt
-
 import streamlit as st
 
 df = pd.read_excel('table_salary.xlsx')
+dfinfl = pd.read_excel('infl.xlsx')
 years = df.columns[1:].astype(int)
 salary_strointel = df[df['Вид деятельности'] == 'Строительство'].values[0][1:]
 salary_hotels = df[df['Вид деятельности'] == 'Гостиницы и рестораны'].values[0][1:]
@@ -33,9 +33,6 @@ plt.plot(years, salary_strointel, '-', color='green',label='Зарплата с�
 plt.plot(years, salary_hotels, '-', color='blue',label="Зарплата работников гостиничного дела")
 plt.plot(years, salary_doctors, '-', color='red',label='Зарплата врача')
 
-st.image('pic1.jpg', caption='Введение')
-
-
 plt.title('Графики изменения номинальной ЗП')
 
 plt.subplot(1, 2, 2)
@@ -46,17 +43,38 @@ plt.plot(years, salary_with_inflation_doctor, '-', color='red', label='Зарп�
 plt.title('Графики изменения реальной ЗП')
 plt.show()
 
-st.title('Изменения зп')
+st.title('Сравнение номинальной и реальной ЗП')
+
+st.image('pic1.jpg', caption='Введение')
+
+st.write('Цель проекта: провести сравнение изменения номинальной и реальной зарплат для 3-х видов деятельности: cтроительства, гостиничного и ресторанного дела, здравоохранения и предоставления социальных услуг в период с 2000 по 2023 год')
+
+@st.cache_data
+def convert_df(df_1):
+    # IMPORTANT: Cache the conversion to prevent computation on every rerun
+    return df_1.to_csv().encode('utf-8')
 
 
-st.write("")
+csv1 = convert_df(df)
+st.write("Данные о зарплате")
 st.write(df)
+st.download_button(
+    label="Скачать данные",
+    data=csv1,
+    file_name='source_file.csv',
+    mime='text/csv',
+)
 
-st.write("Изменение цен:")
+csv2 = convert_df(dfinfl)
+st.write("Данные о инфляции:")
+st.write(dfinfl)
+st.download_button(
+    label="Скачать данные",
+    data=csv2,
+    file_name='source_file_2.csv',
+    mime='text/csv',
+)
+
+st.write("Изменение номинальной и реальной зарплат в период с 2000 по 2023 год:")
 
 st.pyplot(plt)
-
-# st.button("Перезапустить", type="primary")
-
-if st.button("Перезапустить"):
-    st.rerun()
